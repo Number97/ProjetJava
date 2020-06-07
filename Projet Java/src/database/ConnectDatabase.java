@@ -6,7 +6,6 @@
 package database;
 
 import com.mysql.cj.jdbc.StatementImpl;
-import com.mysql.cj.xdevapi.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -22,7 +21,7 @@ public class ConnectDatabase {
     private static Connection conn; // Connector to database.
     private final StatementImpl exec; // Sql executor.
     
-    public ConnectDatabase(String log, String pass) throws SQLException, ClassNotFoundException {
+    public ConnectDatabase(String log, String pass) throws SQLException {
         
         conn = DriverManager.getConnection("jdbc:mysql://localhost/databaseprojetjava?zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=UTC", log, pass); // Get connection.
         

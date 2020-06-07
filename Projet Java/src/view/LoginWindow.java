@@ -14,6 +14,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.*;
 
@@ -27,7 +28,7 @@ public class LoginWindow extends JFrame {
     JPasswordField password;
     ConnectDatabase conn;
     
-    public LoginWindow() throws SQLException, ClassNotFoundException {
+    public LoginWindow() throws SQLException {
         super();
         
         setTitle("Page de connexion"); // Set title of window.
@@ -43,12 +44,7 @@ public class LoginWindow extends JFrame {
         setLocationRelativeTo(null); // Set window in center of screen.
         
         try {
-            try {
-                conn = new ConnectDatabase("root", "");
-            } catch (ClassNotFoundException classe) {
-                System.out.println("Connexion à la base de donnée impossible ! Erreur de classe !");
-                classe.printStackTrace();
-            }
+            conn = new ConnectDatabase("root", "");
         } catch (SQLException sqle) {
             System.out.println("Connexion à la base de donnée impossible ! Erreur sql !");
             sqle.printStackTrace();
@@ -122,7 +118,10 @@ public class LoginWindow extends JFrame {
             String ps = new String(password.getPassword());
             
             // Test if id and password are correct.
-            ok = true;
+            // First try get user by mail in database.
+            String sql = "select * from utilisateur where email='" + id + "';";
+            ArrayList<String> res = conn.execute(sql);
+            
             
             if (ok) {
                 MainWindow win = new MainWindow();

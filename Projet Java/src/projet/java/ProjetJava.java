@@ -5,6 +5,9 @@
  */
 package projet.java;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import view.MainWindow;
 import view.LoginWindow;
@@ -23,7 +26,11 @@ public class ProjetJava {
         
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                LoginWindow login = new LoginWindow();
+                try {
+                    LoginWindow login = new LoginWindow();
+                } catch (SQLException ex) {
+                    System.out.println("Erreur sql !");
+                }
             }
         });
     }

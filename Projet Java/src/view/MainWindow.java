@@ -11,6 +11,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 /**
@@ -389,7 +392,11 @@ public class MainWindow extends JFrame {
         JMenuItem mmi = new JMenuItem("Déconnexion");
         
         mmi.addActionListener((ActionEvent e) -> {
-            LoginWindow log = new LoginWindow();
+            try {
+                LoginWindow log = new LoginWindow();
+            } catch (SQLException ex) {
+                System.out.println("Erreur sql !");
+            }
             this.setVisible(false);
             dispose();
         });
