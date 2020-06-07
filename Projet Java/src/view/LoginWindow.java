@@ -122,9 +122,23 @@ public class LoginWindow extends JFrame {
             String sql = "select * from utilisateur where email='" + id + "';";
             ArrayList<String> res = conn.execute(sql);
             
+            String name = "", famname = "", right = "";
+            
+            for (String re : res) {
+                String[] arr = re.split(",");
+                
+                if (arr[2].equals(ps)) { // Good.
+                    ok = true;
+                    name = arr[4];
+                    famname = arr[3];
+                    right = arr[5];
+                    
+                    break;
+                }
+            }
             
             if (ok) {
-                MainWindow win = new MainWindow();
+                MainWindow win = new MainWindow(name, famname, right);
                 this.setVisible(false);
                 dispose();
             } else {

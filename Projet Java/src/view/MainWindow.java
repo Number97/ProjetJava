@@ -26,8 +26,14 @@ public class MainWindow extends JFrame {
     boolean planningModeList = false;
     JPanel mainPane;
     
-    public MainWindow() {
+    String name, famname, right;
+    
+    public MainWindow(String name_, String famname_, String right_) {
         super();
+        
+        name = name_;
+        famname = famname_;
+        right = right_;
         
         setTitle("Planning"); // Set title of window.
         setVisible(true); // Make window visible.
@@ -302,8 +308,6 @@ public class MainWindow extends JFrame {
             btn.setText(Integer.toString(i + 1));
             btn.setMargin(new Insets(1, 2, 1, 2));
             btn.setVisible(true);
-            System.out.println(i);
-            System.out.println(btn);
             p.add(btn, c);
         }
         pane.add(p, cons); // Add to panel.

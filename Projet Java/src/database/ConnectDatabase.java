@@ -34,14 +34,14 @@ public class ConnectDatabase {
         ArrayList<String> strs = new ArrayList<>();
         
         try {
-            ResultSet res = exec.executeQuery("Select * from utilisateur;");
+            ResultSet res = exec.executeQuery(sql);
             int nb_col = res.getMetaData().getColumnCount();
 
             while (res.next()) {
                 String str = res.getString(1);
 
-                for (int i = 0; i < nb_col; i++) {
-                    str += ", " + res.getString(i + 1);
+                for (int i = 1; i < nb_col; i++) {
+                    str += "," + res.getString(i + 1);
                 }
 
                 strs.add(str);
