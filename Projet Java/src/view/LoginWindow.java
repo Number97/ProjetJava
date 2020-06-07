@@ -5,6 +5,7 @@
  */
 package view;
 
+import database.ConnectDatabase;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -12,6 +13,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Arrays;
 import javax.swing.*;
 
@@ -23,9 +25,9 @@ public class LoginWindow extends JFrame {
     
     JTextField email;
     JPasswordField password;
+    ConnectDatabase conn;
     
-    
-    public LoginWindow() {
+    public LoginWindow() throws SQLException, ClassNotFoundException {
         super();
         
         setTitle("Page de connexion"); // Set title of window.
@@ -39,6 +41,18 @@ public class LoginWindow extends JFrame {
         pack();
         setSize(1400, 900); // Set size of window.
         setLocationRelativeTo(null); // Set window in center of screen.
+        
+        try {
+            try {
+                conn = new ConnectDatabase("root", "");
+            } catch (ClassNotFoundException classe) {
+                System.out.println("Connexion à la base de donnée impossible ! Erreur de classe !");
+                classe.printStackTrace();
+            }
+        } catch (SQLException sqle) {
+            System.out.println("Connexion à la base de donnée impossible ! Erreur sql !");
+            sqle.printStackTrace();
+        }
     }
     
     private void createGUI() {
