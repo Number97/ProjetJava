@@ -49,6 +49,8 @@ public class LoginWindow extends JFrame {
             System.out.println("Connexion à la base de donnée impossible ! Erreur sql !");
             sqle.printStackTrace();
         }
+        
+//        CreateSceanceDialog dialog = new CreateSceanceDialog(this);
     }
     
     private void createGUI() {
@@ -122,7 +124,7 @@ public class LoginWindow extends JFrame {
             String sql = "select * from utilisateur where email='" + id + "';";
             ArrayList<String> res = conn.execute(sql);
             
-            String name = "", famname = "", right = "";
+            String name = "", famname = "", right = "", util = "";
             
             for (String re : res) {
                 String[] arr = re.split(",");
@@ -132,13 +134,14 @@ public class LoginWindow extends JFrame {
                     name = arr[4];
                     famname = arr[3];
                     right = arr[5];
+                    util = arr[0];
                     
                     break;
                 }
             }
             
             if (ok) {
-                MainWindow win = new MainWindow(id, name, famname, right);
+                MainWindow win = new MainWindow(conn, id, name, famname, right, util);
                 this.setVisible(false);
                 dispose();
             } else {

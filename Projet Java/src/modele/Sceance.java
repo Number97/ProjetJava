@@ -10,10 +10,10 @@ package modele;
  * @author ernestpopovici
  */
 public class Sceance {
-    int id,debut,fin,etat,cours,type;
+    String id,debut,fin,etat,cours,type;
     String semaine,date;
     
-    public Sceance(int id,int debut,int fin,int etat,int cours,int type,int capacite,int site,String semaine,String date){
+    public Sceance(String id,String debut,String fin,String etat,String cours,String type,String semaine,String date){
         this.id=id;
         this.debut=debut;
         this.fin=fin;
@@ -24,27 +24,27 @@ public class Sceance {
         this.date=date;
     }
     
-    public int getID(){
+    public String getID(){
         return this.id;
     }
     
-    public int getDebut(){
+    public String getDebut(){
         return this.debut;
     }
     
-    public int getFin(){
+    public String getFin(){
         return this.fin;
     }
     
-    public int getEtat(){
+    public String getEtat(){
         return this.etat;
     }
     
-    public int getCours(){
+    public String getCours(){
         return this.cours;
     }
     
-    public int getType(){
+    public String getType(){
         return this.type;
     }
     

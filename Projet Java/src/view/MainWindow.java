@@ -5,6 +5,7 @@
  */
 package view;
 
+import database.ConnectDatabase;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -12,9 +13,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
 import javax.swing.*;
+import modele.Sceance;
 
 /**
  *
@@ -25,18 +26,27 @@ public class MainWindow extends JFrame {
     
     boolean planningModeList = false;
     JPanel mainPane;
+    JButton curr_week_button;
     
-    String mail, name, famname, right;
+    ConnectDatabase conn;
+    String mail, name, famname, right, id;
+    ArrayList<Sceance> sceances = new ArrayList<>();
     
-    public MainWindow(String mail_, String name_, String famname_, String right_) {
+    String etudiant_num, etudiant_group, etudiant_promo;
+    
+    String curr_semaine = "";
+    
+    public MainWindow(ConnectDatabase conn_, String mail_, String name_, String famname_, String right_, String id_) {
         super();
         
+        conn = conn_;
         mail = mail_;
         name = name_;
         famname = famname_;
         right = right_;
+        id = id_;
         
-        setTitle("Planning"); // Set title of window.
+        setTitle("Planning -- Semaine 1"); // Set title of window.
         setVisible(true); // Make window visible.
         setResizable(false); // Disable resizing of window.
 
@@ -46,9 +56,56 @@ public class MainWindow extends JFrame {
         //createPlanningZone();
         createLayouts();
         
+        recupAllSceances();
+        
         pack();
         setSize(1400, 900); // Set size of window.
         setLocationRelativeTo(null); // Set window in center of screen.
+    }
+    
+    private void recupAllSceances() {
+        
+        if (right.equals("4")) { // Etudiant.
+            // Get promotion.
+            String sql = "select * from etudiant where utilisateur='" + id + "';";
+            ArrayList<String> res = conn.execute(sql);
+            
+            for (String s : res) {
+                String[] strs = s.split(",");
+                etudiant_num = strs[1];
+                etudiant_group = strs[2];
+                etudiant_promo = strs[3];
+            }
+            
+            sql = "select * from sceance_groupes where groupe='" + etudiant_group + "';";
+            res = conn.execute(sql);
+            
+            ArrayList<String> list = new ArrayList<>();
+            for (String s : res) {
+                String[] strs = s.split(",");
+                list.add(strs[0]);
+            }
+            
+            for (String sceance : list) {
+                sql = "select * from sceance where id='" + sceance + "';";
+                res = conn.execute(sql);
+                
+                for (String s : res) {
+                    String[] strs = s.split(",");
+                    String id = strs[0];
+                    String semaine = strs[1];
+                    String date = strs[2];
+                    String debut = strs[3];
+                    String fin = strs[4];
+                    String etat = strs[5];
+                    String cours = strs[6];
+                    String type = strs[7];
+                    sceances.add(new Sceance(id, debut, fin, etat, cours, type, semaine, date));
+                }
+            }
+            
+            
+        }
     }
     
     private void createLayouts() {
@@ -262,8 +319,6 @@ public class MainWindow extends JFrame {
         for (int i = 0; i < 7; i++) {
             JPanel p = new JPanel(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
-        //        c.insets = new Insets(1, 50, 1, 50); // Padding.
-//            p.setBackground(Color.GREEN);
             
             c.gridx = i;
             c.gridy = 0;
@@ -302,6 +357,7 @@ public class MainWindow extends JFrame {
         
         GridBagConstraints c = new GridBagConstraints();
         c.insets = new Insets(1, 1, 1, 1); // Padding.
+        
         for (int i = 0; i < 52; i++) {
             c.gridx = i;
             c.gridy = 0;
@@ -309,6 +365,25 @@ public class MainWindow extends JFrame {
             btn.setText(Integer.toString(i + 1));
             btn.setMargin(new Insets(1, 2, 1, 2));
             btn.setVisible(true);
+            if (i == 0 && this.curr_semaine.equals("")) {
+                btn.setBackground(Color.GREEN);
+                this.curr_week_button = btn;
+                this.curr_semaine = "1";
+            } else if (i == Integer.parseInt(this.curr_semaine) - 1) {
+                btn.setBackground(Color.GREEN);
+            }
+            
+            btn.addActionListener((ActionEvent e) -> {
+                this.curr_semaine = btn.getText();
+                this.setTitle("Planning -- Semaine " + this.curr_semaine);
+                
+                this.remove(this.mainPane);
+                this.createLayouts();
+
+                this.revalidate();
+                this.repaint();
+            });
+            
             p.add(btn, c);
         }
         pane.add(p, cons); // Add to panel.
