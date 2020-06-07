@@ -12,6 +12,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import javax.swing.*;
 
 /**
@@ -19,6 +20,10 @@ import javax.swing.*;
  * @author sLaDer_pH
  */
 public class LoginWindow extends JFrame {
+    
+    JTextField email;
+    JPasswordField password;
+    
     
     public LoginWindow() {
         super();
@@ -61,6 +66,7 @@ public class LoginWindow extends JFrame {
         label = new JLabel("Email : ");
         label.setFont(new Font(this.getFont().getName(), Font.PLAIN, 30));
         JTextField txt = new JTextField(25);
+        email = txt;
         txt.setFont(new Font(this.getFont().getName(), Font.PLAIN, 30));
         p.add(label);
         p.add(txt);
@@ -75,12 +81,13 @@ public class LoginWindow extends JFrame {
         label = new JLabel("Mot de passe : ");
         label.setFont(new Font(this.getFont().getName(), Font.PLAIN, 30));
         final JPasswordField pass = new JPasswordField(25);
+        password = pass;
         pass.setFont(new Font(this.getFont().getName(), Font.PLAIN, 30));
         JButton display = new JButton("Afficher mot de passe");
         display.setFont(new Font(this.getFont().getName(), Font.PLAIN, 20));
         
         display.addActionListener((ActionEvent e) -> {
-            JOptionPane.showMessageDialog(LoginWindow.this, "Le mot de passe est : " + new String(pass.getPassword()));
+            JOptionPane.showMessageDialog(LoginWindow.this, "Le mot de passe est : " + new String(password.getPassword()));
         });
         
         p.add(label);
@@ -93,6 +100,26 @@ public class LoginWindow extends JFrame {
         JButton btn = new JButton("Connexion");
         btn.setFont(new Font(this.getFont().getName(), Font.PLAIN, 30));
         pane.add(btn, cons);
+        
+        btn.addActionListener((ActionEvent e) -> {
+            boolean ok = false;
+            
+            String id = email.getText();
+            String ps = new String(password.getPassword());
+            
+            // Test if id and password are correct.
+            ok = true;
+            
+            if (ok) {
+                MainWindow win = new MainWindow();
+                this.setVisible(false);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(LoginWindow.this, "Email et/ou mot de passe incorrect !");
+                password.setText("");
+                email.setText("");
+            }
+        });
         
         cons.insets = new Insets(1, 1, 20, 1);
         cons.gridy = 4;

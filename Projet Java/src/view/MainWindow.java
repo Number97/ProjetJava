@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 
 /**
@@ -18,6 +19,9 @@ import javax.swing.*;
  * 
  */
 public class MainWindow extends JFrame {
+    
+    boolean planningModeList = false;
+    JPanel mainPane;
     
     public MainWindow() {
         super();
@@ -39,6 +43,7 @@ public class MainWindow extends JFrame {
     
     private void createLayouts() {
         JPanel pane = new JPanel(new GridBagLayout());
+        mainPane = pane;
         this.getContentPane().add(pane);
         
         GridBagConstraints cons = new GridBagConstraints();
@@ -52,10 +57,13 @@ public class MainWindow extends JFrame {
     }
     
     private void createPlanningZone(GridBagConstraints cons, JPanel pane) {
-//        createDayNamesZone(cons, pane);
-//        createHoursZone(cons, pane);
-//        createAllClasses(cons, pane);
-        createAllClassesList(cons, pane);
+        if (planningModeList == false) {
+            createDayNamesZone(cons, pane);
+            createHoursZone(cons, pane);
+            createAllClasses(cons, pane);
+        } else {
+            createAllClassesList(cons, pane);
+        }
     }
     
     private void createAllClassesList(GridBagConstraints cons, JPanel pane) {
@@ -65,7 +73,6 @@ public class MainWindow extends JFrame {
         cons.gridy = 3;
         cons.gridx = 0;
         cons.gridwidth = 3;
-//        cons.gridheight = 7;
         
         String[] days = {"Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"};
         String[] hours = {"08h30 - 10h00", "10h15 - 11h45", "12h00 - 13h30", "13h45 - 15h15", "15h30 - 17h00", "17h15 - 18h45", "19h00 - 20h30"};
@@ -76,7 +83,6 @@ public class MainWindow extends JFrame {
             GridBagConstraints day_cons = new GridBagConstraints();
             day_cons.gridx = 0;
             day_cons.gridy = 0;
-//            day_cons.insets = new Insets(0, 0, 0, 0);
             
             cons.gridy = i + 3;
             
@@ -103,6 +109,13 @@ public class MainWindow extends JFrame {
                     label = new JLabel(strs[k]);
                     p.add(label, hour_cons);
                 }
+                p.setBorder(BorderFactory.createLineBorder(Color.black));
+                
+                if (j % 2 == 0) {
+                    p.setBackground(Color.LIGHT_GRAY);
+                } else {
+                    p.setBackground(Color.GRAY);
+                }
                 
                 day_pane.add(p, day_cons);
             }
@@ -115,7 +128,6 @@ public class MainWindow extends JFrame {
             GridBagConstraints day_cons = new GridBagConstraints();
             day_cons.gridx = 0;
             day_cons.gridy = 0;
-//            day_cons.insets = new Insets(0, 0, 0, 0);
             
             cons.gridy = i + 3;
             cons.gridx = 4;
@@ -142,6 +154,13 @@ public class MainWindow extends JFrame {
                     hour_cons.gridx = k + 1;
                     label = new JLabel(strs[k]);
                     p.add(label, hour_cons);
+                }
+                p.setBorder(BorderFactory.createLineBorder(Color.black));
+                
+                if (j % 2 == 0) {
+                    p.setBackground(Color.LIGHT_GRAY);
+                } else {
+                    p.setBackground(Color.GRAY);
                 }
                 
                 day_pane.add(p, day_cons);
@@ -299,9 +318,28 @@ public class MainWindow extends JFrame {
         JLabel label = new JLabel("Type d'affichage : "); // Label.
         label.setVisible(true);
         p.add(label); // Add label to panel.
-        JComboBox box = new JComboBox();
+        final JComboBox box = new JComboBox();
         box.addItem("En grille");
         box.addItem("En liste");
+        
+        if (this.planningModeList == true) {
+            box.setSelectedIndex(1);
+        }
+        
+        box.addActionListener((ActionEvent e) -> {
+            if ("En grille".equals(box.getSelectedItem().toString())) { // Mode grid.
+                planningModeList = false;
+            } else {
+                planningModeList = true;
+            }
+            
+            this.remove(this.mainPane);
+            this.createLayouts();
+            
+            this.revalidate();
+            this.repaint();
+        });
+        
         p.add(box);
         
         
@@ -316,10 +354,10 @@ public class MainWindow extends JFrame {
         label = new JLabel("Trier par salles : "); // Label.
         label.setVisible(true);
         p.add(label); // Add label to panel.
-        box = new JComboBox();
-        box.addItem("P345");
-        box.addItem("P340");
-        p.add(box);
+        JComboBox bbox = new JComboBox();
+        bbox.addItem("P345");
+        bbox.addItem("P340");
+        p.add(bbox);
         
         pane.add(p, cons); // Add to panel.
         
@@ -332,10 +370,10 @@ public class MainWindow extends JFrame {
         label = new JLabel("Trier par profs : "); // Label.
         label.setVisible(true);
         p.add(label); // Add label to panel.
-        box = new JComboBox();
-        box.addItem("Mr. Segado");
-        box.addItem("Mr. Dupont");
-        p.add(box);
+        bbox = new JComboBox();
+        bbox.addItem("Mr. Segado");
+        bbox.addItem("Mr. Dupont");
+        p.add(bbox);
         
         pane.add(p, cons); // Add to panel.
     }
@@ -344,6 +382,20 @@ public class MainWindow extends JFrame {
         JMenuBar menubar = new JMenuBar();
         this.setJMenuBar(menubar);
 
+        // OPTIONS.
+        JMenu m = new JMenu("Options");
+        menubar.add(m);
+        
+        JMenuItem mmi = new JMenuItem("Déconnexion");
+        
+        mmi.addActionListener((ActionEvent e) -> {
+            LoginWindow log = new LoginWindow();
+            this.setVisible(false);
+            dispose();
+        });
+        
+        m.add(mmi);
+        
         // COURS.
         JMenu menu = new JMenu("Cours");
         menubar.add(menu);

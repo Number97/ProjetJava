@@ -23,8 +23,7 @@ public class ProjetJava {
         
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                MainWindow window = new MainWindow();
-//                LoginWindow login = new LoginWindow();
+                LoginWindow login = new LoginWindow();
             }
         });
     }
