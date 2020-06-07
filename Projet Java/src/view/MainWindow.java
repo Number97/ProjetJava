@@ -26,11 +26,12 @@ public class MainWindow extends JFrame {
     boolean planningModeList = false;
     JPanel mainPane;
     
-    String name, famname, right;
+    String mail, name, famname, right;
     
-    public MainWindow(String name_, String famname_, String right_) {
+    public MainWindow(String mail_, String name_, String famname_, String right_) {
         super();
         
+        mail = mail_;
         name = name_;
         famname = famname_;
         right = right_;
@@ -316,7 +317,7 @@ public class MainWindow extends JFrame {
     private void createChoiceZone(GridBagConstraints cons, JPanel pane) {
         // x0 - y0.
         cons.fill = GridBagConstraints.HORIZONTAL;
-        cons.gridwidth = 2;
+        cons.gridwidth = 1;
         cons.gridx = 0;
         cons.gridy = 0;
         cons.insets = new Insets(50, 50, 50, 50); // Padding of 50 everywhere.
@@ -370,7 +371,7 @@ public class MainWindow extends JFrame {
         
         // x2 - y0.
         cons.fill = GridBagConstraints.HORIZONTAL;
-        cons.gridx = 4;
+        cons.gridx = 3;
         cons.gridy = 0;
         
         p = new JPanel(); // Panel.
@@ -383,6 +384,35 @@ public class MainWindow extends JFrame {
         p.add(bbox);
         
         pane.add(p, cons); // Add to panel.
+        
+        // x3 - y0.
+        cons.gridx = 4;
+        cons.gridwidth = 2;
+        
+        p = new JPanel(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        label = new JLabel(mail);
+        p.add(label, c);
+        c.gridy = 1;
+        label = new JLabel(name + " " + famname);
+        p.add(label, c);
+        c.gridy = 2;
+        String str;
+        if (right.equals("1")) {
+            str = "Administrateur";
+        } else if (right.equals("2")) {
+            str = "Référent pédagogique";
+        } else if (right.equals("3")) {
+            str = "Enseignant";
+        } else {
+            str = "Etudiant";
+        }
+        label = new JLabel(str);
+        p.add(label, c);
+        
+        pane.add(p, cons);
     }
     
     private void createMenu() {

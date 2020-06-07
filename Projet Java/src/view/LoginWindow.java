@@ -138,7 +138,7 @@ public class LoginWindow extends JFrame {
             }
             
             if (ok) {
-                MainWindow win = new MainWindow(name, famname, right);
+                MainWindow win = new MainWindow(id, name, famname, right);
                 this.setVisible(false);
                 dispose();
             } else {
